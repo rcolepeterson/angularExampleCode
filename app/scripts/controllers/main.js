@@ -1,13 +1,16 @@
 'use strict';
 
-angular.module('challengeApp')
+angular.module('myCoolApplication')
     .controller('MainCtrl', function($scope, $http, myService) {
 
+        //$q example
         myService.then(function(users) {
             $scope.users = users;
         });
 
     }).factory('myService', function($q, serviceA, serviceB) {
+
+        //combinine multiple promises into a single promise that is resolved when all of the input promises are resolved.
 
         var fn = function(res) {
             return res.data;
@@ -19,43 +22,12 @@ angular.module('challengeApp')
         ];
 
         return $q.all(promises).then(function(results) {
+
             var users = results[0],
-                logs = results[1],
-                posts = logs,
-                i = 0,
-                len = users.length,
-                currentUserID,
-                filtered,
-                user,
-                fDate;
+                logs = results[1];
 
-            for (i, len; i < len; i++) {
-                user = users[i];
-                user.revenue = 0;
-                user.impressions = 0;
-                user.conversions = 0;
-                currentUserID = user.id;
-                user.data = [0, 0, 0, 0, 0, 0, 0];
+            //you can manipulate consolidated data here
 
-                filtered = posts.filter(function(element) {
-                    return element.user_id === currentUserID;
-                });
-
-                filtered.forEach(function(element, index, array) {
-                    if (element.type === 'impression') {
-                        user.impressions++;
-                    }
-                    if (element.type === 'conversion') {
-                        user.conversions++;
-                        user.revenue += Math.ceil(element.revenue);
-                        fDate = new Date(element.time.substring(0, 10));
-                        user.endDate = user.endDate > fDate ? user.endDate : fDate;
-                        user.startDate = user.startDate < fDate ? user.startDate : fDate;
-                        user.data[fDate.getDay()] += user.revenue;
-                    }
-
-                });
-            }
             return users;
         });
     }).factory('serviceA', function($http) {
@@ -72,13 +44,20 @@ angular.module('challengeApp')
         };
     }).filter('firstLetter', function() {
         return function(input) {
-            if (input !== null)
+
+            //example of a filter
+
+            if (input !== null) {
                 return input.substring(0, 1).toUpperCase();
+            }
         };
     }).directive('imgError', function() {
         return {
             restrict: 'A',
             link: function(scope, element) {
+
+                //display blank image if error occurs .... directive.
+
                 element.bind('error', function() {
                     $(this).attr('src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
                     $(this).unbind('error', this);
@@ -92,7 +71,10 @@ angular.module('challengeApp')
             scope: {
                 data: '@'
             },
-            link: function(scope, element, $compile) {
+            link: function(scope, element) {
+
+                //directive for chart js.
+
                 var chartOptions = {
                     animation: false,
                     scaleShowLabels: false,
