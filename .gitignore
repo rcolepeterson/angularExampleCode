@@ -1,0 +1,14 @@
+# Ignore everything
+*
+
+# But not these files...
+*
+!*/
+!.gitignore
+!app/scripts/controllers/main.js
+
+node_modules
+dist
+.tmp
+.sass-cache
+app/bower_components
